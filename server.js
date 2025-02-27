@@ -1,7 +1,7 @@
-// import http from 'http';
 
+import "dotenv/config";
 import app from "./src/app.js";
-import "dotenv/config"
+
 
 const PORT=3000;
 
