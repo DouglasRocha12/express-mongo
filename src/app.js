@@ -1,30 +1,28 @@
 import express from 'express';
+import connectDatabase from './config/dbConnect.js';
+import livro from './models/Livro.js';
+
+const conexao = await connectDatabase();
+
+conexao.on("error",(erro)=>{
+    console.error('Erro de conexão',erro)
+})
+
+conexao.once("open",()=>{
+   console.log("conexão com o bacno feita com sucesso!") 
+})
 
 const app = express();
 app.use(express.json());
-const livros = [
-    {
-        id: 1,
-        titulo: 'O Senhor dos Anéis',
-        autor: 'J. R. R. Tolkien'
-    } ,
-    {
-        id: 2,
-        titulo: 'Fundação',
-        autor: 'Isaac Asimov'
-    }
-    
-]
 
-function buscaLivroPorId(id){
-    return livros.find(l => l.id == id);
-}
 
 app.get('/', (req, res) => {
     res.status(200).send('Curso de Express API');
 });
-app.get('/livros', (req, res) => {
-    res.status(200).json(livros);
+app.get('/livros', async (req, res) => {
+    const listaLivros = await livro.find({});
+
+    res.status(200).json(listaLivros);
 });
 app.post('/livros', (req, res) => { 
     const livro = req.body;
@@ -66,6 +64,5 @@ app.delete('/livros/:id', (req, res) => {
     }
 });
 
-
-
 export default app;
+
